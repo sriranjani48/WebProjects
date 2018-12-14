@@ -1,9 +1,8 @@
+
 <!DOCTYPE html>
 <html>
-
 <body>
     <h2>INPUT</h2>
-
     <select id="inputArray">
     	<option id='[]'>TestCase1: Empty Array</option>
     	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni", "Peppers"]}]'>TestCase2: 1Email with 3 unique toppings</option>
@@ -66,9 +65,6 @@
 
     <script type="text/javascript">
         function findWinners(inputArray) {
-            /*inputArray.sort((a, b) => {
-                return a.toppings.toString().localeCompare(b.toppings.toString());
-            });*/
             let set = new Set();
             let hashTable = new Map();         
             inputArray.map((order) => {            	
