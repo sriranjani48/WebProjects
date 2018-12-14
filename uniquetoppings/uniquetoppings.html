@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>INPUT</h2>
+
+    <select id="inputArray">
+    	<option id='[]'>TestCase1: Empty Array</option>
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni", "Peppers"]}]'>TestCase2: 1Email with 3 unique toppings</option>
+
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]},{"email":"email2@example.com","toppings":["Cheddar","Garlic","Oregano"]}, {"email":"email3@example.com","toppings":["Bacon","Ham","Pineapple"]}]'>TestCase3: 3 Unique Email with Exactly 3 Unique toppings</option>
+
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Mushrooms", "Mushrooms"]}]'>TestCase4: 1Email with same 3 toppings</option>
+
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]},{"email":"email2@example.com","toppings":["Cheddar","Garlic","Oregano"]}, {"email":"email3@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]}]'>TestCase5: 2Email with same 3 toppings</option>
+
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]},{"email":"email1@example.com","toppings":["Cheddar","Garlic","Oregano"]}]'>TestCase6: 1Email with exactly 3 unique toppings
+    	</option>
+
+    	<option value='[{"email":"email1@example.com","toppings":["Cheddar","Garlic","Oregano"]},{"email":"email2@example.com","toppings":["CheDDar","gaRLic","oregAno"]}]'>TestCase7: 2Emails with same toppings only differ by Case</option>
+    	
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]}, {"email":"email3@example.com","toppings":["Pepperoni","Mushrooms","Peppers"]}]'>TestCase8:  2Emails with same 3 toppings that only differ by order of toppings</option>
+
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]},{"email":"email2@example.com","toppings":["Cheddar","Garlic","Oregano"]}, {"email":"email3@example.com","toppings":["Pepperoni","Mushrooms","Peppers"]}, {"email":"email4@example.com","toppings":["Garlic","Oregano","Cheddar"]}, {"email":"email5@example.com","toppings":["Garlic","Garlic","Garlic"]}]'>TestCase9: Duplicated Entries
+    	</option>
+    	
+    	<option value='[{"email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]},{"email":"email2@example.com","toppings":["Cheddar","Garlic","Oregano"]},{"email":"email3@example.com","toppings":["Bacon","Ham","Pineapple"]},{"email":"","toppings":["Parmesan","Tomatoes"]},{"email":"email4@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]},{"email":"","toppings":["Cheddar","Tomatoes"]},{"email":"email5@example.com","toppings":["Bacon","Ham","Pineapple"]},{"email":"email6@example.com","toppings":["Beef","Parmesan"]},{"email":"","toppings":["Onions","Pepperoni"]},{"email":"","toppings":["Bacon","Ham","Pineapple"]}]'>TestCase10: Multiple Emails and Toppings, with 1 Unique Order</option>
+
+    	<option value='email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]'>TestCase11: Input is Not a JSON Object</option>
+
+    	<option value='{email":"email1@example.com","toppings":["Mushrooms","Pepperoni","Peppers"]}'>TestCase12: Input is Not a JSON Array Object</option>
+    </select>
+
+    <br><br><br>
+    <button type="button" onclick="callWinners()">PrintWinners</button>
+    <br>
+    <h2>OUPUT</h2>
+    <p id="demo"></p>
+
+    <script type="text/javascript">
+        function callWinners() {
+            var inputArray = document.getElementById("inputArray");
+            var optionValue = inputArray[inputArray.selectedIndex].value;
+            if(optionValue){
+            	try {
+            		var text = JSON.parse(optionValue);
+            	} catch(e){
+            		document.getElementById('demo').innerHTML = e.message;
+            		return;
+            	}
+            }
+           	var result = findWinners(text);
+            var place = "";
+            if(result.size === 0){
+            	document.getElementById('demo').innerHTML = "No Unique Toppings";
+            } else {
+            	result.forEach((value) => {
+	            place += value.email + "<br>";
+	        });
+	        document.getElementById('demo').innerHTML = place;
+	   		} 
+        }
+           
+        //}
+    </script>
+
+    <script type="text/javascript">
+        function findWinners(inputArray) {
+            /*inputArray.sort((a, b) => {
+                return a.toppings.toString().localeCompare(b.toppings.toString());
+            });*/
+            let set = new Set();
+            let hashTable = new Map();         
+            inputArray.map((order) => {            	
+                let toppingsAsString = order.toppings.sort().toString().toLowerCase(); 
+                let matchingValue = [... new Set(order.toppings)];
+               
+                if((set.has(toppingsAsString)) || matchingValue.length != 3){
+                	hashTable.delete(toppingsAsString);
+                } else{
+                	set.add(toppingsAsString);
+                	hashTable.set(toppingsAsString, {email: order.email});
+                }	
+            });
+        	return hashTable;
+        }
+    </script>
+</body>
+
+</html>
